@@ -14,6 +14,7 @@ jobs:
       max-parallel: 4
       matrix:
         python-version: [3.13]
+        aiofiles-version: ["25.1.0", ""]
 
     steps:
       - uses: actions/checkout@v3
@@ -23,6 +24,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: TDD
+        env:
+          AIOFILES_VERSION: ${{ matrix.aiofiles-version }}
         run: |
           ./tdd
 

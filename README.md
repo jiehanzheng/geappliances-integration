@@ -25,6 +25,26 @@ The preferred method of installing this integration is through the [Home Assista
 1. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "GE Appliances"
 
 
+## Dependency compatibility
+
+This private fork requires `aiofiles~=25.0`, which means `>=25.0,<26.0` under
+[Python's compatible-release rules](https://packaging.python.org/en/latest/specifications/version-specifiers/#compatible-release).
+It accepts Home Assistant's 25.1.0 without GE forcing the old 24.1.0 downgrade
+in the shared Python process. The [25.1.0 release](https://github.com/Tinche/aiofiles/blob/main/CHANGELOG.md)
+also explicitly adds Python 3.14 support, matching the deployed Home Assistant.
+
+`aiofiles` uses calendar versioning. The upper bound is our deliberate review
+boundary, not an upstream guarantee of semantic compatibility. Review and test
+26.x before raising the bound; if Home Assistant requires 26.x first, update this
+fork before upgrading Home Assistant rather than bypassing dependency checks.
+The integration uses the public `aiofiles.open`/`read` async context-manager API.
+
+CI tests both the first published 25.x release (25.1.0) and the newest release
+allowed by the manifest.
+Set `AIOFILES_VERSION=25.1.0` when invoking `./tdd` to select that baseline; omit it
+to resolve the newest allowed release. The selected version and all test
+requirements are resolved together, so conflicting requirements fail installation.
+
 ## Contributions are welcome!
 
 If you want to contribute to this please read the [Contribution guidelines](CONTRIBUTING.md)
