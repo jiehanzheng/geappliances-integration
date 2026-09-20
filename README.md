@@ -25,28 +25,6 @@ The preferred method of installing this integration is through the [Home Assista
 1. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "GE Appliances"
 
 
-## Dependency compatibility
-
-This private fork requires `aiofiles>=24.0,<26.0`: all 24.x and 25.x releases.
-The integration uses only the public `aiofiles.open`/`read` async context-manager
-API. The published releases in these series are 24.1.0 and 25.1.0; upstream's
-changes between them preserve the text-file operations used here. Both have been
-tested with GE's bundled JSON reads on Python 3.13 and 3.14. The older release's
-upstream testing covered Python 3.13; [25.1.0 explicitly adds Python 3.14 support](https://github.com/Tinche/aiofiles/blob/main/CHANGELOG.md).
-
-Accepting both releases lets GE use the version already selected by Home
-Assistant, including Slack's 25.1.0, without demanding a downgrade to 24.1.0.
-`aiofiles` uses calendar versioning. The 26.0 upper bound is our deliberate review
-boundary, not an upstream guarantee of semantic compatibility. Test 26.x and
-update this fork before upgrading to Home Assistant requirements that demand it.
-Unreleased versions within the permitted series have not yet been audited.
-
-CI runs the full suite with 24.1.0, 25.1.0, and the newest allowed release. Set
-`AIOFILES_VERSION=24.1.0` or `AIOFILES_VERSION=25.1.0` when invoking `./tdd` to
-select a baseline; omit it to resolve the newest allowed release. The selected
-version and all test requirements are resolved together, so conflicts fail
-installation. Review new releases when updating Home Assistant.
-
 ## Contributions are welcome!
 
 If you want to contribute to this please read the [Contribution guidelines](CONTRIBUTING.md)
