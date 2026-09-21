@@ -124,6 +124,9 @@ class DataSource:
                 VALUE: value,
                 EVENT: Event(),
             }
+        if value is not None:
+            # API manifests carry updated capabilities; retain listeners, not stale data.
+            self._data[device_name][UNSUPPORTED_ERDS][erd][VALUE] = value
 
     async def move_erd_to_supported(self, device_name: str, erd: Erd) -> None:
         """Move the given ERD to the supported list."""
