@@ -106,7 +106,8 @@ class DataSource:
         """Add the ERD to the specified device's list of supported ERDs."""
         if erd in self._data[device_name][UNSUPPORTED_ERDS]:
             await self.move_erd_to_supported(device_name, erd)
-        else:
+        elif erd not in self._data[device_name][SUPPORTED_ERDS]:
+            # Rediscovery must preserve the existing value and entity subscriptions.
             self._data[device_name][SUPPORTED_ERDS][erd] = {
                 VALUE: value,
                 EVENT: Event(),
@@ -118,7 +119,7 @@ class DataSource:
         """Add the ERD to the device's list of unsupported ERDs."""
         if erd in self._data[device_name][SUPPORTED_ERDS]:
             await self.move_erd_to_unsupported(device_name, erd)
-        else:
+        elif erd not in self._data[device_name][UNSUPPORTED_ERDS]:
             self._data[device_name][UNSUPPORTED_ERDS][erd] = {
                 VALUE: value,
                 EVENT: Event(),
