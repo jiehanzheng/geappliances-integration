@@ -21,6 +21,7 @@ class RegistryUpdater:
         self._device_registry = dr.async_get(hass)
         self._hass = hass
         self._entry = entry
+        self._dispatched_entities: set[tuple[str, str]] = set()
 
     async def add_entity_to_device(
         self, config: GeaEntityConfig, device_name: str
@@ -28,6 +29,12 @@ class RegistryUpdater:
         """Create an entity from the config and add it to the device."""
         _LOGGER.debug("Adding %s to %s", config.platform, device_name)
         if "reserved" not in config.name and "Reserved" not in config.name:
+            key = (config.platform, config.unique_identifier)
+            if key in self._dispatched_entities:
+                return
+            # Paired entities subscribe to their status ERD, so subscriptions do not
+            # identify registered entities. Reserve the ID before asynchronous setup.
+            self._dispatched_entities.add(key)
             async_dispatcher_send(
                 self._hass, GEA_ENTITY_NEW.format(config.platform), config
             )

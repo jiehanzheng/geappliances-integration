@@ -106,7 +106,8 @@ class DataSource:
         """Add the ERD to the specified device's list of supported ERDs."""
         if erd in self._data[device_name][UNSUPPORTED_ERDS]:
             await self.move_erd_to_supported(device_name, erd)
-        else:
+        elif erd not in self._data[device_name][SUPPORTED_ERDS]:
+            # Rediscovery must preserve the existing value and entity subscriptions.
             self._data[device_name][SUPPORTED_ERDS][erd] = {
                 VALUE: value,
                 EVENT: Event(),
@@ -118,11 +119,14 @@ class DataSource:
         """Add the ERD to the device's list of unsupported ERDs."""
         if erd in self._data[device_name][SUPPORTED_ERDS]:
             await self.move_erd_to_unsupported(device_name, erd)
-        else:
+        elif erd not in self._data[device_name][UNSUPPORTED_ERDS]:
             self._data[device_name][UNSUPPORTED_ERDS][erd] = {
                 VALUE: value,
                 EVENT: Event(),
             }
+        if value is not None:
+            # API manifests carry updated capabilities; retain listeners, not stale data.
+            self._data[device_name][UNSUPPORTED_ERDS][erd][VALUE] = value
 
     async def move_erd_to_supported(self, device_name: str, erd: Erd) -> None:
         """Move the given ERD to the supported list."""

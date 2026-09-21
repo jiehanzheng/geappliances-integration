@@ -84,10 +84,12 @@ async def async_setup_entry(
             entity.entity_id, device_id=config.device_id
         )
 
-    async_dispatcher_connect(
-        hass,
-        GEA_ENTITY_NEW.format(select.const.DOMAIN),
-        async_discover,
+    config_entry.async_on_unload(
+        async_dispatcher_connect(
+            hass,
+            GEA_ENTITY_NEW.format(select.const.DOMAIN),
+            async_discover,
+        )
     )
 
 
